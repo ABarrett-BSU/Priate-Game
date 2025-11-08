@@ -90,35 +90,76 @@ class Game(simpleGE.Scene):
                 self.sndCoin.play()
                 self.score += 10
                 self.lblScore.text = f"Score: {self.score}"
+                
             self.lblTime.text = f"Time Left: {self.timer.getTimeLeft():.2f}"
             if self.timer.getTimeLeft() < 0:
                 print(f"Score: {self.score}")
                 self.stop()
 
 class Instructions(simpleGE.Scene):
-    def __init__(self):
+    def __init__(self, prevScore):
         super().__init__()
+        
+        self.prevScore = prevScore
+
         self.setImage("ship.png")
+        self.response ="Quit"
 
         self.directions = simpleGE.MultiLabel()
         self.directions.textLines = [
            "Ahoy, matey! You’re a pirate on a quest for treasure!",
            "Use the arrow keys to sail left or right or up and down.",
-           "Snatch as many gold coins as ye can,",
+           "Snatch as many gold coins as ye can before time runs out!",
            "before time runs out!",
-           "",
-           "Hoist the sails and good luck!"
-        ]
-        self.directions.center = (320, 240)
+           "Hoist the sails and good luck!"]
+        
+        self.directions.center = (320, 350)
         self.directions.size = (550, 250)
-        self.sprites = [self.directions]
+        
+        self.btnPlay = simpleGE.Button()
+        self.btnPlay.text = "Play"
+        self.btnPlay.center = (100, 25)
+
+        self.btnQuit = simpleGE.Button()
+        self.btnQuit.text = "Quit"
+        self.btnQuit.center = (500, 25)
+        
+        self.lblScore = simpleGE.Label()
+        self.lblScore.text = "Last score: 0"
+        self.lblScore.center = (300, 25)
+        
+        self.lblScore.text = f"Last score: {self.prevScore}"
+
+        self.sprites = [self.directions,
+                        self.btnPlay,
+                        self.btnQuit,
+                        self.lblScore]
+        
+    def process(self):
+        if self.btnPlay.clicked:
+            self.response = "Play"
+            self.stop() 
+
+        if self.btnQuit.clicked:
+            self.response = "Quit"
+            self.stop() 
 
 def main():
-    instructions = Instructions()
-    instructions.start()
     
-    game = Game()
-    game.start()
+    keepGoing = True
+    lastScore = 0
+            
+    while keepGoing:
+        instructions = Instructions(lastScore)
+        instructions.start()
+
+        if instructions.response == "Play":
+            game = Game()
+            game.start()
+            lastScore = game.score
+            
+        else:
+            keepGoing = False
 
 
 if __name__ == "__main__":
