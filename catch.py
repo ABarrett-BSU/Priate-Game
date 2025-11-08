@@ -6,7 +6,7 @@ class Coin(simpleGE.Sprite):
         self.setImage("Coin.png")
         self.setSize(25, 25)
         self.minSpeed = 3
-        self.maxSpeed = 8
+        self.maxSpeed = 10
         self.reset()
 
     def reset(self):
@@ -29,7 +29,7 @@ class Pirate(simpleGE.Sprite):
         self.setImage("Pirate2.png")
         self.setSize(90, 90)
         self.setposition = (320, 400)
-        self.moveSpeed = 5
+        self.moveSpeed = 15
 
     def process(self):
         if self.scene.isKeyPressed(pygame.K_LEFT):
@@ -65,7 +65,7 @@ class Game(simpleGE.Scene):
         self.lblScore = LblScore()
         
         self.timer = simpleGE.Timer()
-        self.timer.totalTime = 10      
+        self.timer.totalTime = 20     
         self.timer.start()
         self.lblTime = LblTime()
 
